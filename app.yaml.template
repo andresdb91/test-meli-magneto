@@ -1,0 +1,6 @@
+runtime: go112
+
+env_variables:
+  MONGODB_CREDS_USER: "mutant"
+  MONGODB_CREDS_PWD: <mongodb_password>
+  MONGODB_SERVER: "35.243.211.133"
