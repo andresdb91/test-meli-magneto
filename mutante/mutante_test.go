@@ -34,7 +34,7 @@ func TestIsMutant(t *testing.T) {
 	for _, c := range cases {
 		got := IsMutant(c.in)
 		if got != c.result {
-			t.Errorf("isMutant(%q) == %t, deberia ser %t", c.in, got, c.result)
+			t.Errorf("Mutant check incorrect (%q), got: %t, want: %t", c.in, got, c.result)
 		}
 	}
 }
