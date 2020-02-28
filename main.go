@@ -1,11 +1,13 @@
 package main
 
 import (
-	"os"
-
-	"github.com/andresdb91/test-meli-magneto/mutante"
+	"github.com/andresdb91/test-meli-magneto/api"
 )
 
+// func main() {
+// 	mutante.IsMutant(os.Args[1:])
+// }
+
 func main() {
-	mutante.IsMutant(os.Args[1:])
+	api.Run()
 }
