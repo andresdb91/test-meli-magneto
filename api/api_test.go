@@ -18,9 +18,11 @@ func TestHttpPostMutant(t *testing.T) {
 		},
 		{
 			[]byte(`{"dna":["ATGCGA","CTGTGC","TTATGT","AGAAGG","CCACTA","TCACTG"]}`),
-			http.StatusOK,
+			http.StatusForbidden,
 		},
 	}
+
+	router := setupRouter()
 
 	for _, c := range cases {
 		req, err := http.NewRequest("POST", "/mutant", bytes.NewBuffer(c.in))
@@ -31,8 +33,7 @@ func TestHttpPostMutant(t *testing.T) {
 
 		req.Header.Set("Content-Type", "application/json")
 		rec := httptest.NewRecorder()
-		handler := http.HandlerFunc(checkMutant)
-		handler.ServeHTTP(rec, req)
+		router.ServeHTTP(rec, req)
 
 		if status := rec.Code; status != c.want {
 			t.Errorf("checkMutant returned wrong code, got: %v, want: %v", status, c.want)

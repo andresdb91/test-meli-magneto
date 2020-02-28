@@ -17,3 +17,5 @@
 *.vscode
 *.code-workspace
 
+# Test binary
+main
