@@ -17,7 +17,7 @@ func TestHttpPostMutant(t *testing.T) {
 			http.StatusOK,
 		},
 		{
-			[]byte(`{"dna":["ATGCGA","CTGTGC","TTATGT","AGAAGG","CCACTA","TCACTG"]}`),
+			[]byte(`{"dna":["ATGCGA","CTGTAC","TTATGT","AGAAGG","CCACTA","TCACTG"]}`),
 			http.StatusForbidden,
 		},
 	}
