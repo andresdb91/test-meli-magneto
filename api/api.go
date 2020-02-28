@@ -35,7 +35,7 @@ func setupRouter() *gin.Engine {
 }
 
 // Run configura e inicia el servidor HTTP Gin
-func Run(routerParam string) {
+func Run() {
 	router := setupRouter()
-	router.Run(routerParam)
+	router.Run()
 }

@@ -9,5 +9,5 @@ import (
 // }
 
 func main() {
-	api.Run(":8080")
+	api.Run()
 }
