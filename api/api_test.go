@@ -29,6 +29,7 @@ func TestHttpPostMutant(t *testing.T) {
 	}
 
 	router := setupRouter()
+	hll.Client = hlltest.SetupMockRedis()
 	dbtest.SetupMockDb()
 
 	for _, c := range cases {
@@ -48,6 +49,7 @@ func TestHttpPostMutant(t *testing.T) {
 	}
 
 	dbtest.CleanupMockDb()
+	hlltest.CleanupMockRedis(hll.Client)
 }
 
 func TestHttpGetStats(t *testing.T) {
@@ -64,11 +66,11 @@ func TestHttpGetStats(t *testing.T) {
 		},
 		{
 			key:   "count_mutant_dna",
-			value: fmt.Sprintf("%d", countH),
+			value: fmt.Sprintf("%d", countM),
 		},
 		{
 			key:   "ratio",
-			value: fmt.Sprintf("%2.1f", float32(countM/countH)),
+			value: fmt.Sprintf("%2.1f", float32(countM)/float32(countH)),
 		},
 	}
 
@@ -90,8 +92,6 @@ func TestHttpGetStats(t *testing.T) {
 	var res map[string]string
 	err = json.Unmarshal([]byte(rec.Body.String()), &res)
 
-	fmt.Println(res)
-
 	for _, c := range expected {
 		value, exists := res[c.key]
 		if exists {
@@ -102,5 +102,6 @@ func TestHttpGetStats(t *testing.T) {
 			t.Errorf("Expected key not found: %v\n", c.key)
 		}
 	}
+
 	hlltest.CleanupMockRedis(hll.Client)
 }
