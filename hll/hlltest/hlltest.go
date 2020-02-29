@@ -22,7 +22,7 @@ func CleanupMockRedis(rc *redis.Client) {
 }
 
 // PopulateMockRedis carga datos ficticios en Redis para realizar pruebas
-func PopulateMockRedis(rc *redis.Client) {
+func PopulateMockRedis(rc *redis.Client) (int64, int64) {
 	mockData := []struct {
 		set   string
 		value string
@@ -57,7 +57,16 @@ func PopulateMockRedis(rc *redis.Client) {
 		},
 	}
 
+	var countH, countM int64
+
 	for _, d := range mockData {
 		rc.PFAdd(d.set, d.value)
+		if d.set == "human" {
+			countH++
+		} else {
+			countM++
+		}
 	}
+
+	return countH, countM
 }
