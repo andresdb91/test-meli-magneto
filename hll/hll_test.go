@@ -5,18 +5,12 @@ import (
 	"math"
 	"testing"
 
-	"github.com/go-redis/redis/v7"
+	"github.com/andresdb91/test-meli-magneto/hll/hlltest"
 )
-
-var redisHLLTest = 2
 
 func TestHLLAddHuman(t *testing.T) {
 
-	client = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       redisHLLTest,
-	})
+	client = hlltest.SetupMockRedis()
 
 	tolerance := 0.01
 
@@ -71,5 +65,5 @@ func TestHLLAddHuman(t *testing.T) {
 		fmt.Printf("human: %d\nmutant: %d\n", countH, countM)
 	}
 
-	client.FlushDB()
+	hlltest.CleanupMockRedis(client)
 }
