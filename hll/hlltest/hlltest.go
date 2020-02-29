@@ -20,3 +20,44 @@ func SetupMockRedis() *redis.Client {
 func CleanupMockRedis(rc *redis.Client) {
 	rc.FlushDB()
 }
+
+// PopulateMockRedis carga datos ficticios en Redis para realizar pruebas
+func PopulateMockRedis(rc *redis.Client) {
+	mockData := []struct {
+		set   string
+		value string
+	}{
+		{
+			set:   "human",
+			value: "a",
+		},
+		{
+			set:   "human",
+			value: "b",
+		},
+		{
+			set:   "human",
+			value: "c",
+		},
+		{
+			set:   "human",
+			value: "d",
+		},
+		{
+			set:   "mutant",
+			value: "x",
+		},
+		{
+			set:   "mutant",
+			value: "y",
+		},
+		{
+			set:   "mutant",
+			value: "z",
+		},
+	}
+
+	for _, d := range mockData {
+		rc.PFAdd(d.set, d.value)
+	}
+}
