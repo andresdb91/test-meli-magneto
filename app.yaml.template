@@ -3,4 +3,4 @@ runtime: go112
 env_variables:
   MONGODB_CREDS_USER: "mutant"
   MONGODB_CREDS_PWD: <mongodb_password>
-  MONGODB_SERVER_ADDR: "35.211.78.16"
+  MONGODB_SERVER_ADDR: "35.211.115.241"
