@@ -4,7 +4,14 @@ import (
 	"fmt"
 	"math"
 	"strings"
+	"time"
+
+	"github.com/andresdb91/test-meli-magneto/db"
 )
+
+var dbName = "mutantdb"
+var dnaCollection = "dna"
+var statsCollection = "stats"
 
 // IsMutant verifica si una cadena de ADN corresponde a un mutante
 func IsMutant(dna []string) bool {
@@ -13,7 +20,8 @@ func IsMutant(dna []string) bool {
 	var dr, dl [5]int
 	var coin int
 
-	dnaVect := []rune(strings.Join(dna[:], ""))
+	dnaString := strings.Join(dna[:], "")
+	dnaVect := []rune(dnaString)
 
 	fmt.Printf("\nNew DNA sequence: %q\n", dna)
 
@@ -94,10 +102,38 @@ func IsMutant(dna []string) bool {
 
 		if coin > 1 {
 			fmt.Printf("--------------------------------\nResult: Mutant\nSequences: %d\n\n", coin)
+			SaveDNA(dnaString, true)
 			return true
 		}
 	}
 
 	fmt.Printf("--------------------------------\nResult: Human\nSequences: %d\n\n", coin)
+	SaveDNA(dnaString, false)
 	return false
+}
+
+// CheckDNA verifica si la cadena de ADN recibida ya esta en la base de datos
+// Si la cadena existe también retorna el resultado del examen
+func CheckDNA(dna string) (exists bool, result bool) {
+	// dnaCol := db.Client.Database(dbName).Collection(dnaCollection)
+	return false, false
+}
+
+// SaveDNA almacena una secuencia de ADN y el resultado de su examen en la base de datos
+func SaveDNA(dna string, result bool) {
+	dnaCol := db.Client.Database(dbName).Collection(dnaCollection)
+
+	dnaObj := DNA{
+		DNA:       dna,
+		Result:    result,
+		Timestamp: time.Now(),
+	}
+
+	res, err := dnaCol.InsertOne(nil, dnaObj)
+
+	if err != nil {
+		fmt.Printf("Error while storing DNA: %v", err)
+	} else {
+		fmt.Printf("Inserted document: %v", res)
+	}
 }
