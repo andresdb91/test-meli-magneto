@@ -22,29 +22,39 @@ func TestHLLAddHuman(t *testing.T) {
 
 	cases := []struct {
 		in    string
+		set   string
 		wantH int64
 		wantM int64
 	}{
 		{
 			in:    "humano_1",
+			set:   "human",
 			wantH: 1,
 			wantM: 0,
 		},
 		{
 			in:    "humano_2",
+			set:   "human",
 			wantH: 2,
 			wantM: 0,
 		},
 		{
 			in:    "humano_1",
+			set:   "human",
 			wantH: 2,
 			wantM: 0,
+		},
+		{
+			in:    "mutante_1",
+			set:   "mutant",
+			wantH: 2,
+			wantM: 1,
 		},
 	}
 
 	for _, c := range cases {
 		var e float64
-		AddToHLL("human", c.in)
+		AddToHLL(c.set, c.in)
 
 		countH := GetCountHLL("human")
 		e = math.Abs(float64(countH-c.wantH)) / float64(c.wantH)
@@ -60,4 +70,6 @@ func TestHLLAddHuman(t *testing.T) {
 
 		fmt.Printf("human: %d\nmutant: %d\n", countH, countM)
 	}
+
+	Client.FlushDB()
 }
