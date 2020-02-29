@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/andresdb91/test-meli-magneto/db/dbtest"
+	"github.com/andresdb91/test-meli-magneto/hll"
+	"github.com/andresdb91/test-meli-magneto/hll/hlltest"
 )
 
 func TestIsMutant(t *testing.T) {
@@ -35,6 +37,7 @@ func TestIsMutant(t *testing.T) {
 		},
 	}
 
+	hll.Client = hlltest.SetupMockRedis()
 	dbtest.SetupMockDb()
 
 	for _, c := range cases {
@@ -45,4 +48,5 @@ func TestIsMutant(t *testing.T) {
 	}
 
 	dbtest.CleanupMockDb()
+	hlltest.CleanupMockRedis(hll.Client)
 }
