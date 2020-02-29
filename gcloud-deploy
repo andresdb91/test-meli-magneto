@@ -1,5 +1,6 @@
 #!/bin/bash
 sed "s:<mongodb_password>:$MELIMONGOPWD:" app.yaml.template > app.yaml
+sed "s:<redis_password>:$REDISPWD:" app.yaml.template > app.yaml
 gcloud app deploy &
 sleep 2
 rm app.yaml
