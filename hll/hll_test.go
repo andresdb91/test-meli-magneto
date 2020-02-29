@@ -10,7 +10,7 @@ import (
 
 func TestHLLAddHuman(t *testing.T) {
 
-	client = hlltest.SetupMockRedis()
+	Client = hlltest.SetupMockRedis()
 
 	tolerance := 0.01
 
@@ -65,5 +65,5 @@ func TestHLLAddHuman(t *testing.T) {
 		fmt.Printf("human: %d\nmutant: %d\n", countH, countM)
 	}
 
-	hlltest.CleanupMockRedis(client)
+	hlltest.CleanupMockRedis(Client)
 }
