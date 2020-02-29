@@ -10,6 +10,11 @@ import (
 
 func setupMockDb() {
 	db.Client, _ = mongo.Connect(nil, options.Client().ApplyURI("mongodb://localhost:27017"))
+	dbName = "mutantdb_test"
+}
+
+func cleanupMockDb() {
+	db.Client.Database("mutantdb_test").Drop(nil)
 }
 
 func TestIsMutant(t *testing.T) {
@@ -49,4 +54,6 @@ func TestIsMutant(t *testing.T) {
 			t.Errorf("Mutant check incorrect (%q), got: %t, want: %t", c.in, got, c.result)
 		}
 	}
+
+	cleanupMockDb()
 }
