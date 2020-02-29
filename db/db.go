@@ -35,7 +35,7 @@ func SetupDB() {
 		port = "27017"
 	}
 
-	dbURI := fmt.Sprintf("mongodb://%s:%s@%s:%s", user, passwd, server, port)
+	dbURI := fmt.Sprintf("mongodb://%s:%s@%s:%s/mutantdb", user, passwd, server, port)
 	var err error
 	Client, err = mongo.Connect(context.TODO(), options.Client().ApplyURI(dbURI))
 	if err != nil {

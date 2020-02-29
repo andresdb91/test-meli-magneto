@@ -120,7 +120,10 @@ func checkDNA(dna string) (exists bool, result bool) {
 	dnaCol := db.Client.Database(db.DbName).Collection(db.DnaCollection)
 
 	var dnaObj db.DNA
-	filter := bson.D{{"dna", dna}}
+	filter := bson.D{{
+		Key:   "dna",
+		Value: dna,
+	}}
 	findOpts := options.Find()
 	findOpts.SetLimit(2)
 
