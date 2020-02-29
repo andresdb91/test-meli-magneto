@@ -8,7 +8,7 @@ import (
 )
 
 // Client representa el cliente Redis
-var Client *redis.Client
+var client *redis.Client
 
 var redisHLLProd = 1
 
@@ -24,7 +24,7 @@ func SetupHLL() {
 	}
 	passwd := os.Getenv("REDIS_CREDS_PWD")
 
-	Client = redis.NewClient(&redis.Options{
+	client = redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", host, port),
 		Password: passwd,
 		DB:       redisHLLProd,
@@ -33,12 +33,12 @@ func SetupHLL() {
 
 // AddToHLL agrega un valor al set del HLL
 func AddToHLL(set string, value string) {
-	Client.PFAdd(set, value)
+	client.PFAdd(set, value)
 }
 
 // GetCountHLL obtiene la cardinalidad del set
 func GetCountHLL(set string) int64 {
-	count, err := Client.PFCount(set).Result()
+	count, err := client.PFCount(set).Result()
 	if err != nil {
 		panic(err)
 	}

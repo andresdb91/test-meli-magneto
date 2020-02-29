@@ -12,7 +12,7 @@ var redisHLLTest = 2
 
 func TestHLLAddHuman(t *testing.T) {
 
-	Client = redis.NewClient(&redis.Options{
+	client = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",
 		DB:       redisHLLTest,
@@ -71,5 +71,5 @@ func TestHLLAddHuman(t *testing.T) {
 		fmt.Printf("human: %d\nmutant: %d\n", countH, countM)
 	}
 
-	Client.FlushDB()
+	client.FlushDB()
 }
