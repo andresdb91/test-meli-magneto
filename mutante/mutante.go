@@ -4,7 +4,16 @@ import (
 	"fmt"
 	"math"
 	"strings"
+	"time"
+
+	"github.com/andresdb91/test-meli-magneto/db"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+var dbName = "mutantdb"
+var dnaCollection = "dna"
+var statsCollection = "stats"
 
 // IsMutant verifica si una cadena de ADN corresponde a un mutante
 func IsMutant(dna []string) bool {
@@ -13,9 +22,15 @@ func IsMutant(dna []string) bool {
 	var dr, dl [5]int
 	var coin int
 
-	dnaVect := []rune(strings.Join(dna[:], ""))
+	dnaString := strings.Join(dna[:], "")
+	dnaVect := []rune(dnaString)
 
-	fmt.Printf("\nNew DNA sequence: %q\n", dna)
+	fmt.Printf("New DNA sequence: %q\n\n", dna)
+
+	exists, result := checkDNA(dnaString)
+	if exists {
+		return result
+	}
 
 	for x := 0; x < len(dnaVect); x++ {
 		i = x % 6
@@ -94,10 +109,51 @@ func IsMutant(dna []string) bool {
 
 		if coin > 1 {
 			fmt.Printf("--------------------------------\nResult: Mutant\nSequences: %d\n\n", coin)
+			saveDNA(dnaString, true)
 			return true
 		}
 	}
 
 	fmt.Printf("--------------------------------\nResult: Human\nSequences: %d\n\n", coin)
+	saveDNA(dnaString, false)
 	return false
+}
+
+func checkDNA(dna string) (exists bool, result bool) {
+	dnaCol := db.Client.Database(dbName).Collection(dnaCollection)
+
+	var dnaObj DNA
+	filter := bson.D{{"dna", dna}}
+	findOpts := options.Find()
+	findOpts.SetLimit(2)
+
+	cur, err := dnaCol.Find(nil, filter, findOpts)
+	if err != nil {
+		fmt.Printf("Error when fetching results: %v\n", err)
+	}
+
+	exists = cur.Next(nil)
+	if exists {
+		cur.Decode(&dnaObj)
+	}
+
+	return exists, dnaObj.Result
+}
+
+func saveDNA(dna string, result bool) {
+	dnaCol := db.Client.Database(dbName).Collection(dnaCollection)
+
+	dnaObj := DNA{
+		DNA:       dna,
+		Result:    result,
+		Timestamp: time.Now(),
+	}
+
+	res, err := dnaCol.InsertOne(nil, dnaObj)
+
+	if err != nil {
+		fmt.Printf("Error while storing DNA: %v\n", err)
+	} else {
+		fmt.Printf("Inserted document: %v\n", res)
+	}
 }
