@@ -1,23 +1,31 @@
 package hll
 
 import (
-	"fmt"
-
 	"github.com/go-redis/redis/v7"
 )
 
-// var Client
+// Client representa el cliente Redis
+var Client *redis.Client
 
 // SetupHLL configura la conexion a Redis para utilizar como HLL
-func SetupHLL() error {
-	Client := redis.NewClient(&redis.Options{
+func SetupHLL() {
+	Client = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",
 		DB:       0,
 	})
+}
 
-	pong, err := Client.Ping().Result()
-	fmt.Println(pong, err)
+// AddToHLL agrega un valor al set del HLL
+func AddToHLL(set string, value string) {
+	Client.PFAdd(set, value)
+}
 
-	return err
+// GetCountHLL obtiene la cardinalidad del set
+func GetCountHLL(set string) int64 {
+	count, err := Client.PFCount(set).Result()
+	if err != nil {
+		panic(err)
+	}
+	return count
 }
