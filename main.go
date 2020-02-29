@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/andresdb91/test-meli-magneto/api"
 	"github.com/andresdb91/test-meli-magneto/db"
 )
@@ -10,6 +12,7 @@ import (
 // }
 
 func main() {
+	fmt.Println("asd")
 	db.SetupDB()
 	api.Run()
 }

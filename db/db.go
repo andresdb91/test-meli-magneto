@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -36,7 +37,7 @@ func SetupDB() {
 
 	dbURI := fmt.Sprintf("mongodb://%s:%s@%s:%s", user, passwd, server, port)
 	var err error
-	Client, err = mongo.Connect(nil, options.Client().ApplyURI(dbURI))
+	Client, err = mongo.Connect(context.TODO(), options.Client().ApplyURI(dbURI))
 	if err != nil {
 		fmt.Printf("Error al conectar a mongodb: %v\n", err)
 	}
@@ -48,5 +49,5 @@ func SetupDB() {
 		},
 		Options: nil,
 	}
-	col.Indexes().CreateOne(nil, mod)
+	col.Indexes().CreateOne(context.TODO(), mod)
 }

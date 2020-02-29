@@ -1,6 +1,7 @@
 package mutante
 
 import (
+	"context"
 	"fmt"
 	"math"
 	"strings"
@@ -123,12 +124,12 @@ func checkDNA(dna string) (exists bool, result bool) {
 	findOpts := options.Find()
 	findOpts.SetLimit(2)
 
-	cur, err := dnaCol.Find(nil, filter, findOpts)
+	cur, err := dnaCol.Find(context.TODO(), filter, findOpts)
 	if err != nil {
 		fmt.Printf("Error when fetching results: %v\n", err)
 	}
 
-	exists = cur.Next(nil)
+	exists = cur.Next(context.TODO())
 	if exists {
 		cur.Decode(&dnaObj)
 	}
@@ -145,7 +146,7 @@ func saveDNA(dna string, result bool) {
 		Timestamp: time.Now(),
 	}
 
-	res, err := dnaCol.InsertOne(nil, dnaObj)
+	res, err := dnaCol.InsertOne(context.TODO(), dnaObj)
 
 	if err != nil {
 		fmt.Printf("Error while storing DNA: %v\n", err)
