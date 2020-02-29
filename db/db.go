@@ -4,12 +4,16 @@ import (
 	"fmt"
 	"os"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // Client representa el cliente a la base de datos MongoDB
 var Client *mongo.Client
+
+// DbName indica el nombre de la base de datos
+var DbName = "mutantdb"
 
 // SetupDB configura la conexion con el servidor MongoDB
 func SetupDB() {
@@ -36,4 +40,13 @@ func SetupDB() {
 	if err != nil {
 		fmt.Printf("Error al conectar a mongodb: %v\n", err)
 	}
+
+	col := Client.Database(DbName).Collection(DnaCollection)
+	mod := mongo.IndexModel{
+		Keys: bson.M{
+			"dna": 1,
+		},
+		Options: nil,
+	}
+	col.Indexes().CreateOne(nil, mod)
 }

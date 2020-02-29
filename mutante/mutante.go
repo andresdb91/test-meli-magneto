@@ -11,10 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var dbName = "mutantdb"
-var dnaCollection = "dna"
-var statsCollection = "stats"
-
 // IsMutant verifica si una cadena de ADN corresponde a un mutante
 func IsMutant(dna []string) bool {
 	var v [6]int
@@ -25,7 +21,7 @@ func IsMutant(dna []string) bool {
 	dnaString := strings.Join(dna[:], "")
 	dnaVect := []rune(dnaString)
 
-	fmt.Printf("New DNA sequence: %q\n\n", dna)
+	fmt.Printf("\nNew DNA sequence: %q\n\n", dna)
 
 	exists, result := checkDNA(dnaString)
 	if exists {
@@ -40,7 +36,7 @@ func IsMutant(dna []string) bool {
 
 		if i == 0 {
 			h = 0
-			fmt.Printf("\nNew row: %d\n", j)
+			fmt.Printf("New row: %d\n", j)
 		}
 
 		if 6-i+h >= 4 {
@@ -120,9 +116,9 @@ func IsMutant(dna []string) bool {
 }
 
 func checkDNA(dna string) (exists bool, result bool) {
-	dnaCol := db.Client.Database(dbName).Collection(dnaCollection)
+	dnaCol := db.Client.Database(db.DbName).Collection(db.DnaCollection)
 
-	var dnaObj DNA
+	var dnaObj db.DNA
 	filter := bson.D{{"dna", dna}}
 	findOpts := options.Find()
 	findOpts.SetLimit(2)
@@ -141,9 +137,9 @@ func checkDNA(dna string) (exists bool, result bool) {
 }
 
 func saveDNA(dna string, result bool) {
-	dnaCol := db.Client.Database(dbName).Collection(dnaCollection)
+	dnaCol := db.Client.Database(db.DbName).Collection(db.DnaCollection)
 
-	dnaObj := DNA{
+	dnaObj := db.DNA{
 		DNA:       dna,
 		Result:    result,
 		Timestamp: time.Now(),
