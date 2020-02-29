@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/andresdb91/test-meli-magneto/api"
+	"github.com/andresdb91/test-meli-magneto/db"
 )
 
 // func main() {
@@ -9,5 +10,6 @@ import (
 // }
 
 func main() {
+	db.SetupDB()
 	api.Run()
 }
