@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/andresdb91/test-meli-magneto/db"
+	"github.com/andresdb91/test-meli-magneto/hll"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -141,6 +142,15 @@ func checkDNA(dna string) (exists bool, result bool) {
 }
 
 func saveDNA(dna string, result bool) {
+	var set string
+	if result {
+		set = "mutant"
+	} else {
+		set = "human"
+	}
+
+	hll.AddToHLL(set, dna)
+
 	dnaCol := db.Client.Database(db.DbName).Collection(db.DnaCollection)
 
 	dnaObj := db.DNA{
