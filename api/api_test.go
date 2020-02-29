@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/andresdb91/test-meli-magneto/db/dbtest"
 )
 
 func TestHttpPostMutant(t *testing.T) {
@@ -23,6 +25,7 @@ func TestHttpPostMutant(t *testing.T) {
 	}
 
 	router := setupRouter()
+	dbtest.SetupMockDb()
 
 	for _, c := range cases {
 		req, err := http.NewRequest("POST", "/mutant", bytes.NewBuffer(c.in))
@@ -39,6 +42,8 @@ func TestHttpPostMutant(t *testing.T) {
 			t.Errorf("checkMutant returned wrong code, got: %v, want: %v", status, c.want)
 		}
 	}
+
+	dbtest.CleanupMockDb()
 }
 
 func TestHttpGetStats(t *testing.T) {}

@@ -3,19 +3,8 @@ package mutante
 import (
 	"testing"
 
-	"github.com/andresdb91/test-meli-magneto/db"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/andresdb91/test-meli-magneto/db/dbtest"
 )
-
-func setupMockDb() {
-	db.Client, _ = mongo.Connect(nil, options.Client().ApplyURI("mongodb://localhost:27017"))
-	db.DbName = "mutantdb_test"
-}
-
-func cleanupMockDb() {
-	db.Client.Database("mutantdb_test").Collection(db.DnaCollection).Drop(nil)
-}
 
 func TestIsMutant(t *testing.T) {
 	cases := []struct {
@@ -46,7 +35,7 @@ func TestIsMutant(t *testing.T) {
 		},
 	}
 
-	setupMockDb()
+	dbtest.SetupMockDb()
 
 	for _, c := range cases {
 		got := IsMutant(c.in)
@@ -55,5 +44,5 @@ func TestIsMutant(t *testing.T) {
 		}
 	}
 
-	cleanupMockDb()
+	dbtest.CleanupMockDb()
 }
