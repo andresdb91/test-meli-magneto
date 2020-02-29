@@ -13,6 +13,5 @@ type DNA struct {
 type Stats struct {
 	CountMutant int
 	CountHuman  int
-	Ratio       float32
 	Timestamp   time.Time
 }
