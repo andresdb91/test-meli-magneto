@@ -65,6 +65,10 @@ func TestMutantFormatCheck(t *testing.T) {
 			[]byte(`{"dna":["ATGCGA","CTGTAC","TTATGT","AGA","CCACTA","TCATG"]}`),
 			http.StatusBadRequest,
 		},
+		{
+			[]byte(`{"dna":["ATGCRA","CTGTAC","TTATGT","AGA","CCACTA","TCATG"]}`),
+			http.StatusBadRequest,
+		},
 	}
 
 	router := setupRouter()
