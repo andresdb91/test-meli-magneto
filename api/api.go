@@ -34,13 +34,18 @@ func checkMutant(c *gin.Context) {
 		}
 		dnaRunes := []rune(e)
 		for _, d := range dnaRunes {
+			match := false
 			for _, v := range validDNA {
-				if d != v {
-					c.JSON(http.StatusBadRequest, gin.H{
-						"error": "Incorrect DNA sequence format",
-					})
-					return
+				if d == v {
+					match = true
+					break
 				}
+			}
+			if !match {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"error": "Incorrect DNA sequence format",
+				})
+				return
 			}
 		}
 	}
