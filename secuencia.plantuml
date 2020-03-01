@@ -27,7 +27,7 @@ opt no existe: (exists == false)
         HLL -> Redis: PFAdd(set, dna)
         Redis --> HLL
         HLL --> Mutante
-        Mutante -> DB: Save(dnaObj, result)
+        Mutante -> DB: Save(dnaObj)
         note right: dnaObj: Modelo de ADN y resultado\npara base de datos
         DB -> MongoDB: InsertOne(dnaObj)
         MongoDB --> DB

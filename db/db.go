@@ -51,3 +51,18 @@ func SetupDB() {
 	}
 	col.Indexes().CreateOne(context.TODO(), mod)
 }
+
+// Save guarda un documento en la coleccion indicada de la base de datos
+func Save(document DNA) (bool, error) {
+	dnaCol := Client.Database(DbName).Collection(DnaCollection)
+
+	res, err := dnaCol.InsertOne(context.TODO(), document)
+
+	if err != nil {
+		fmt.Printf("Error while storing DNA: %v\n", err)
+		return false, err
+	} else {
+		fmt.Printf("Inserted document: %v\n", res)
+		return true, err
+	}
+}

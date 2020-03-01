@@ -157,19 +157,11 @@ func saveDNA(dna string, result bool) {
 
 	hll.AddToHLL(set, dna)
 
-	dnaCol := db.Client.Database(db.DbName).Collection(db.DnaCollection)
-
 	dnaObj := db.DNA{
 		DNA:       dna,
 		Result:    result,
 		Timestamp: time.Now(),
 	}
 
-	res, err := dnaCol.InsertOne(context.TODO(), dnaObj)
-
-	if err != nil {
-		fmt.Printf("Error while storing DNA: %v\n", err)
-	} else {
-		fmt.Printf("Inserted document: %v\n", res)
-	}
+	db.Save(dnaObj)
 }
