@@ -5,6 +5,7 @@
   * [Requisitos](#requisitos)
   * [Configuración](#configuración)
   * [Instrucciones](#instrucciones)
+  * [Pruebas](#pruebas)
 * [Uso](#uso)
   * [POST /mutant](#post-/mutant)
   * [GET /stats](#get-/stats)
@@ -36,6 +37,20 @@ Variables para Redis:
 - Asignar variables de entorno requeridas
 - Compilar y ejecutar main.go
 
+### Pruebas
+Para ejecutar las pruebas se requiere una instancia local de MongoDB y una de Redis, ambas sin autenticación y corriendo en su puerto por defecto (27017 para MongoDB y 6379 para Redis)
+
+El método más sencillo consiste en ejecutar estos servicios con docker para mantenerlos efímeros y separados de cualquier otro ambiente.
+
+#### MongoDB
+```
+  docker run --rm -p 27017:27017 -d mongo:4.2.3-bionic
+```
+
+#### Redis
+```
+  docker run --rm -p 6379:6379 -d redis:5.0.7-buster
+```
 
 ## Uso
 El programa responde a través de una interfaz HTTP REST a las siguientes solicitudes:
