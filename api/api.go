@@ -24,12 +24,24 @@ func checkMutant(c *gin.Context) {
 		return
 	}
 
+	validDNA := []rune("ATGC")
 	for _, e := range data.Dna {
 		if len(e) != 6 {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": "Incorrect DNA sequence format",
 			})
 			return
+		}
+		dnaRunes := []rune(e)
+		for _, d := range dnaRunes {
+			for _, v := range validDNA {
+				if d != v {
+					c.JSON(http.StatusBadRequest, gin.H{
+						"error": "Incorrect DNA sequence format",
+					})
+					return
+				}
+			}
 		}
 	}
 
