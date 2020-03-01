@@ -34,13 +34,14 @@ func SetupHLL() {
 // AddToHLL agrega un valor al set del HLL
 func AddToHLL(set string, value string) {
 	Client.PFAdd(set, value)
+
 }
 
 // GetCountHLL obtiene la cardinalidad del set
 func GetCountHLL(set string) int64 {
 	count, err := Client.PFCount(set).Result()
 	if err != nil {
-		panic(err)
+		fmt.Printf("Error when counting instances: %v", err)
 	}
 	return count
 }
