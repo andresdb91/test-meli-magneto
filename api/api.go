@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/andresdb91/test-meli-magneto/hll"
 	"github.com/andresdb91/test-meli-magneto/mutante"
 	"github.com/gin-gonic/gin"
 )
@@ -24,12 +25,24 @@ func checkMutant(c *gin.Context) {
 	}
 }
 
-func getStats() {}
+func getStats(c *gin.Context) {
+	countM := hll.GetCountHLL("mutant")
+	countH := hll.GetCountHLL("human")
+	ratio := float32(countM) / float32(countH)
+
+	response := gin.H{
+		"count_mutant_dna": fmt.Sprintf("%d", countM),
+		"count_human_dna":  fmt.Sprintf("%d", countH),
+		"ratio":            fmt.Sprintf("%2.1f", ratio),
+	}
+	c.JSON(http.StatusOK, response)
+}
 
 func setupRouter() *gin.Engine {
 	router := gin.Default()
 
 	router.POST("/mutant", checkMutant)
+	router.GET("/stats", getStats)
 
 	return router
 }
