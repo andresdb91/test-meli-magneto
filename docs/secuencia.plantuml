@@ -39,6 +39,6 @@ Mutante --> API: result
 alt mutante (result == true)
     API --> Magneto: HTTP 200 OK
 else humano (result == false)
-    Api --> Magneto: HTTP 403 Forbidden
+    API --> Magneto: HTTP 403 Forbidden
 end
 @enduml
