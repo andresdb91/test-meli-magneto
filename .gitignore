@@ -20,5 +20,6 @@
 # Test binary
 main
 
-# Temp file with secrets
+# Files with secrets
 app.yaml
+.localenv
