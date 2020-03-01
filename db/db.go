@@ -52,7 +52,33 @@ func SetupDB() {
 	col.Indexes().CreateOne(context.TODO(), mod)
 }
 
-// Save guarda un documento en la coleccion indicada de la base de datos
+// Find busca un documento en la base de datos
+func Find(dna string) (exists bool, result bool, err error) {
+	dnaCol := Client.Database(DbName).Collection(DnaCollection)
+
+	var dnaObj DNA
+	filter := bson.D{{
+		"dna",
+		dna,
+	}}
+	findOpts := options.Find()
+	findOpts.SetLimit(1)
+
+	cur, err := dnaCol.Find(context.TODO(), filter, findOpts)
+	if err != nil {
+		fmt.Printf("Error when fetching results: %v\n", err)
+		return false, false, err
+	}
+
+	exists = cur.Next(context.TODO())
+	if exists {
+		cur.Decode(&dnaObj)
+	}
+
+	return exists, dnaObj.Result, nil
+}
+
+// Save guarda un documento en la base de datos
 func Save(document DNA) (bool, error) {
 	dnaCol := Client.Database(DbName).Collection(DnaCollection)
 

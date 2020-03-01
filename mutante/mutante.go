@@ -1,7 +1,6 @@
 package mutante
 
 import (
-	"context"
 	"fmt"
 	"math"
 	"strings"
@@ -9,8 +8,6 @@ import (
 
 	"github.com/andresdb91/test-meli-magneto/db"
 	"github.com/andresdb91/test-meli-magneto/hll"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // IsMutant verifica si una cadena de ADN corresponde a un mutante
@@ -124,27 +121,8 @@ func IsMutant(dna []string) bool {
 }
 
 func checkDNA(dna string) (exists bool, result bool) {
-	dnaCol := db.Client.Database(db.DbName).Collection(db.DnaCollection)
-
-	var dnaObj db.DNA
-	filter := bson.D{{
-		Key:   "dna",
-		Value: dna,
-	}}
-	findOpts := options.Find()
-	findOpts.SetLimit(2)
-
-	cur, err := dnaCol.Find(context.TODO(), filter, findOpts)
-	if err != nil {
-		fmt.Printf("Error when fetching results: %v\n", err)
-	}
-
-	exists = cur.Next(context.TODO())
-	if exists {
-		cur.Decode(&dnaObj)
-	}
-
-	return exists, dnaObj.Result
+	exists, result, _ = db.Find(dna)
+	return
 }
 
 func saveDNA(dna string, result bool) {
