@@ -1,0 +1,44 @@
+@startuml secuencia
+actor Magneto
+boundary API
+control Mutante
+control DB
+control HLL
+entity DNA
+database MongoDB
+database Redis
+
+Magneto -> API: POST /mutant {"dna": "[...]"}
+API -> Mutante: IsMutant(dna)
+Mutante -> Mutante: checkDNA(dna)
+group checkDNA
+    Mutante -> DB: Find(dna)
+    DB -> MongoDB: Query
+    MongoDB --> DB: exists, result
+    DB --> Mutante: exists, result
+end
+Mutante --> Mutante
+opt no existe: (exists == false)
+    Mutante -> Mutante: saveDNA(dna, result)
+    note right: result: Resultado del analisis de ADN
+    group saveDNA
+        Mutante -> HLL: AddToHLL(set, dna)
+        note right: mutante: set = "mutant"\nhumano: set = "human"
+        HLL -> Redis: PFAdd(set, dna)
+        Redis --> HLL
+        HLL --> Mutante
+        Mutante -> DB: Save(dnaObj, result)
+        note right: dnaObj: Modelo de ADN y resultado\npara base de datos
+        DB -> MongoDB: InsertOne(dnaObj)
+        MongoDB --> DB
+        DB --> Mutante
+    end
+    Mutante --> Mutante
+end
+Mutante --> API: result
+alt mutante (result == true)
+    API --> Magneto: HTTP 200 OK
+else humano (result == false)
+    Api --> Magneto: HTTP 403 Forbidden
+end
+@enduml
