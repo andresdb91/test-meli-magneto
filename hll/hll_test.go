@@ -50,13 +50,13 @@ func TestHLLAddHuman(t *testing.T) {
 		var e float64
 		AddToHLL(c.set, c.in)
 
-		countH := GetCountHLL("human")
+		countH, _ := GetCountHLL("human")
 		e = math.Abs(float64(countH-c.wantH)) / float64(c.wantH)
 		if e > tolerance {
 			t.Errorf("Returned human count doesn't match, got: %d, want: %d +/- %4.3f\n", countH, c.wantH, tolerance)
 		}
 
-		countM := GetCountHLL("mutant")
+		countM, _ := GetCountHLL("mutant")
 		e = math.Abs(float64(countM-c.wantM)) / float64(c.wantM)
 		if e > tolerance {
 			t.Errorf("Returned mutant count doesn't match, got: %d, want: %d +/- %4.3f\n", countM, c.wantM, tolerance)
