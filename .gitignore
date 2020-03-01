@@ -23,3 +23,5 @@ main
 # Files with secrets
 app.yaml
 .localenv
+
+out/
