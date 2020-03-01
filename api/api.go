@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"math"
 	"net/http"
 
 	"github.com/andresdb91/test-meli-magneto/hll"
@@ -62,16 +63,16 @@ func checkMutant(c *gin.Context) {
 func getStats(c *gin.Context) {
 	countM, errM := hll.GetCountHLL("mutant")
 	countH, errH := hll.GetCountHLL("human")
-	ratio := float32(countM) / float32(countH)
+	ratio := float64(countM) / float64(countH)
 
 	if errM != nil || errH != nil {
 		c.JSON(http.StatusInternalServerError, nil)
 	}
 
 	response := gin.H{
-		"count_mutant_dna": fmt.Sprintf("%d", countM),
-		"count_human_dna":  fmt.Sprintf("%d", countH),
-		"ratio":            fmt.Sprintf("%2.1f", ratio),
+		"count_mutant_dna": countM,
+		"count_human_dna":  countH,
+		"ratio":            math.Round(ratio*10) / 10,
 	}
 	c.JSON(http.StatusOK, response)
 }

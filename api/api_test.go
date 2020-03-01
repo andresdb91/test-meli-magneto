@@ -3,7 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"math"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -93,22 +93,23 @@ func TestMutantFormatCheck(t *testing.T) {
 func TestHttpGetStats(t *testing.T) {
 	hll.Client = hlltest.SetupMockRedis()
 	countH, countM := hlltest.PopulateMockRedis(hll.Client)
+	ratio := float64(countM) / float64(countH)
 
 	expected := []struct {
 		key   string
-		value string
+		value float64
 	}{
 		{
 			key:   "count_human_dna",
-			value: fmt.Sprintf("%d", countH),
+			value: float64(countH),
 		},
 		{
 			key:   "count_mutant_dna",
-			value: fmt.Sprintf("%d", countM),
+			value: float64(countM),
 		},
 		{
 			key:   "ratio",
-			value: fmt.Sprintf("%2.1f", float32(countM)/float32(countH)),
+			value: math.Round(ratio*10) / 10,
 		},
 	}
 
@@ -127,7 +128,7 @@ func TestHttpGetStats(t *testing.T) {
 		t.Errorf("getStats returned wrong code, got: %v, want: %v\n", status, http.StatusOK)
 	}
 
-	var res map[string]string
+	var res map[string]float64
 	err = json.Unmarshal([]byte(rec.Body.String()), &res)
 
 	for _, c := range expected {
