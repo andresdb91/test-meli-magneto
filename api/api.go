@@ -19,7 +19,7 @@ func checkMutant(c *gin.Context) {
 
 	if len(data.Dna) != 6 {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"Error": "Incorrect DNA sequence format",
+			"error": "Incorrect DNA sequence format",
 		})
 		return
 	}
@@ -27,7 +27,7 @@ func checkMutant(c *gin.Context) {
 	for _, e := range data.Dna {
 		if len(e) != 6 {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"Error": "Incorrect DNA sequence format",
+				"error": "Incorrect DNA sequence format",
 			})
 			return
 		}
@@ -43,9 +43,13 @@ func checkMutant(c *gin.Context) {
 }
 
 func getStats(c *gin.Context) {
-	countM := hll.GetCountHLL("mutant")
-	countH := hll.GetCountHLL("human")
+	countM, errM := hll.GetCountHLL("mutant")
+	countH, errH := hll.GetCountHLL("human")
 	ratio := float32(countM) / float32(countH)
+
+	if errM != nil || errH != nil {
+		c.JSON(http.StatusInternalServerError, nil)
+	}
 
 	response := gin.H{
 		"count_mutant_dna": fmt.Sprintf("%d", countM),
