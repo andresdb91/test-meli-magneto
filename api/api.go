@@ -16,6 +16,23 @@ func checkMutant(c *gin.Context) {
 	data := new(DnaArray)
 	c.BindJSON(data)
 	fmt.Printf("%q\n", data)
+
+	if len(data.Dna) != 6 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Error": "Incorrect DNA sequence format",
+		})
+		return
+	}
+
+	for _, e := range data.Dna {
+		if len(e) != 6 {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"Error": "Incorrect DNA sequence format",
+			})
+			return
+		}
+	}
+
 	result := mutante.IsMutant(data.Dna)
 
 	if result {
