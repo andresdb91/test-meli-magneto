@@ -18,19 +18,19 @@
 La configuración se gestiona a través de variables de entorno para cada servicio requerido.
 
 ---
-Variables para MongoDB:
-* MONGODB_CREDS_USER: Usuario de base de datos
-* MONGODB_CREDS_PWD: Contraseña del usuario de base de datos
-* MONGODB_SERVER_ADDR: Dirección del servidor de base de datos
+Variables para MongoDB y valores por defecto:
+* MONGODB_CREDS_USER: Usuario de base de datos ("mutant")
+* MONGODB_CREDS_PWD: Contraseña del usuario de base de datos ("mutant")
+* MONGODB_SERVER_ADDR: Dirección del servidor de base de datos ("localhost")
+* MONGODB_SERVER_PORT: Puerto del servidor de base de datos ("27017")
+* MONGODB_DATABASE: Nombre de la base de datos ("mutantdb")
 
-El programa usa la base de datos **mutantdb** en funcionamiento y **mutantdb_test** para las pruebas
 
 ---
 Variables para Redis:
 * REDIS_SERVER_ADDR: 
 * REDIS_CREDS_PWD: 
 
-El programa usa la base de datos con índice **1** en funcionamiento y **2** para las pruebas
 
 ### Instrucciones
 - Asignar variables de entorno requeridas

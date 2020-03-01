@@ -34,12 +34,17 @@ func SetupDB() {
 	if port == "" {
 		port = "27017"
 	}
+	database := os.Getenv("MONGODB_DATABASE")
+	if database == "" {
+		database = "mutantdb"
+	}
 
-	dbURI := fmt.Sprintf("mongodb://%s:%s@%s:%s/mutantdb", user, passwd, server, port)
+	dbURI := fmt.Sprintf("mongodb://%s:%s@%s:%s/%s", user, passwd, server, port, database)
 	var err error
 	Client, err = mongo.Connect(context.TODO(), options.Client().ApplyURI(dbURI))
 	if err != nil {
 		fmt.Printf("Error al conectar a mongodb: %v\n", err)
+		panic(err)
 	}
 
 	col := Client.Database(DbName).Collection(DnaCollection)
@@ -79,16 +84,17 @@ func Find(dna string) (exists bool, result bool, err error) {
 }
 
 // Save guarda un documento en la base de datos
-func Save(document DNA) (bool, error) {
+func Save(document DNA) error {
 	dnaCol := Client.Database(DbName).Collection(DnaCollection)
 
 	res, err := dnaCol.InsertOne(context.TODO(), document)
 
 	if err != nil {
 		fmt.Printf("Error while storing DNA: %v\n", err)
-		return false, err
-	} else {
-		fmt.Printf("Inserted document: %v\n", res)
-		return true, err
+		return err
 	}
+
+	fmt.Printf("Inserted document: %v\n", res)
+	return err
+
 }
