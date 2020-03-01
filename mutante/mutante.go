@@ -16,7 +16,7 @@ import (
 // IsMutant verifica si una cadena de ADN corresponde a un mutante
 func IsMutant(dna []string) bool {
 	var v [6]int
-	var h, i, j, r, l int
+	var h, i, j, r, l, lh int
 	var dr, dl [5]int
 	var coin int
 
@@ -35,6 +35,12 @@ func IsMutant(dna []string) bool {
 		j = x / 6
 		r = i - j + 2
 		l = i + j - 3
+
+		if i > j {
+			lh = i + j
+		} else {
+			lh = i - j
+		}
 
 		if i == 0 {
 			h = 0
@@ -89,7 +95,7 @@ func IsMutant(dna []string) bool {
 			}
 		}
 
-		if (0 <= l) && (l <= 4) && (((i+j)*6-x)/5+dl[l] >= 3) {
+		if (0 <= l) && (l <= 4) && (((lh)*6-x)/5+dl[l] >= 3) {
 			fmt.Printf("Comparing: %q == %q\n", dnaVect[x], dnaVect[x+5])
 			if dnaVect[x] == dnaVect[x+5] {
 				if dl[l] < 2 {
